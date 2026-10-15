@@ -1,2 +1,771 @@
-# -
-顶峰收益小账本
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>顶峰收益账本 V3.2</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js">
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{min-height:100vh;padding:15px;display:flex;justify-content:center;font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;}
+
+body.gold{background:#080808;}
+body.gold .card{background:linear-gradient(160deg,rgba(201,168,76,.15),transparent 35%),#111;border-color:#c9a84c;box-shadow:0 20px 80px rgba(201,168,76,.3);}
+body.gold .title{background:linear-gradient(180deg,#fff,#ffeeb0);-webkit-background-clip:text;color:transparent;}
+body.gold .sub,body.gold .label,body.gold .note-item,body.gold .calc-result div{color:#9c8750;}
+body.gold .value,body.gold .calc-result span,body.gold .note-title,body.gold .calc-title,body.gold .panel h3{color:#ffeeb0;}
+body.gold .theme button,body.gold .month button,body.gold .clear{border-color:#c9a84c;color:#ffeeb0;}
+body.gold .stat,body.gold .day,body.gold .note-box,body.gold .panel{background:rgba(201,168,76,.05);border-color:rgba(201,168,76,.2);}
+body.gold .day.active{border-color:#c9a84c;background:rgba(201,168,76,.1);}
+body.gold .day input{color:#ffeeb0;border-color:#c9a84c;}
+body.gold .day input::placeholder{color:rgba(255,238,176,0.3);}
+body.gold .calculator input,body.gold .calculator select,body.gold .panel textarea{color:#ffeeb0;border-color:#c9a84c;}
+body.gold .calculator{border-color:#c9a84c;}
+body.gold .export,body.gold #calcBtn,body.gold .panel button{background:linear-gradient(135deg,#c9a84c,#ffeeb0);color:#000;}
+body.gold .day-num{color:rgba(255,238,176,0.6);}
+body.gold .day.active .day-num{color:#ffeeb0;}
+body.gold .week{color:rgba(255,238,176,0.7);}
+body.gold .month span{color:#ffeeb0;}
+body.gold #noteList,body.gold #noteList div{color:rgba(255,238,176,0.8);}
+
+body.jade{background:#031710;}
+body.jade .card{background:linear-gradient(160deg,rgba(35,201,151,.15),transparent 35%),#08271d;border-color:#23c997;box-shadow:0 20px 80px rgba(35,201,151,.3);}
+body.jade .title{background:linear-gradient(180deg,#fff,#d0fff2);-webkit-background-clip:text;color:transparent;}
+body.jade .sub,body.jade .label,body.jade .note-item,body.jade .calc-result div{color:#65a890;}
+body.jade .value,body.jade .calc-result span,body.jade .note-title,body.jade .calc-title,body.jade .panel h3{color:#d0fff2;}
+body.jade .theme button,body.jade .month button,body.jade .clear{border-color:#23c997;color:#d0fff2;}
+body.jade .stat,body.jade .day,body.jade .note-box,body.jade .panel{background:rgba(35,201,151,.05);border-color:rgba(35,201,151,.2);}
+body.jade .day.active{border-color:#23c997;background:rgba(35,201,151,.1);}
+body.jade .day input{color:#d0fff2;border-color:#23c997;}
+body.jade .day input::placeholder{color:rgba(208,255,242,0.3);}
+body.jade .calculator input,body.jade .calculator select,body.jade .panel textarea{color:#d0fff2;border-color:#23c997;}
+body.jade .calculator{border-color:#23c997;}
+body.jade .export,body.jade #calcBtn,body.jade .panel button{background:linear-gradient(135deg,#23c997,#d0fff2);color:#000;}
+body.jade .day-num{color:rgba(208,255,242,0.6);}
+body.jade .day.active .day-num{color:#d0fff2;}
+body.jade .week{color:rgba(208,255,242,0.7);}
+body.jade .month span{color:#d0fff2;}
+body.jade #noteList,body.jade #noteList div{color:rgba(208,255,242,0.8);}
+
+body.blue{background:#061326;}
+body.blue .card{background:linear-gradient(160deg,rgba(77,163,255,.15),transparent 35%),#0b203d;border-color:#4da3ff;box-shadow:0 20px 80px rgba(77,163,255,.3);}
+body.blue .title{background:linear-gradient(180deg,#fff,#d8ecff);-webkit-background-clip:text;color:transparent;}
+body.blue .sub,body.blue .label,body.blue .note-item,body.blue .calc-result div{color:#7698c0;}
+body.blue .value,body.blue .calc-result span,body.blue .note-title,body.blue .calc-title,body.blue .panel h3{color:#d8ecff;}
+body.blue .theme button,body.blue .month button,body.blue .clear{border-color:#4da3ff;color:#d8ecff;}
+body.blue .stat,body.blue .day,body.blue .note-box,body.blue .panel{background:rgba(77,163,255,.05);border-color:rgba(77,163,255,.2);}
+body.blue .day.active{border-color:#4da3ff;background:rgba(77,163,255,.1);}
+body.blue .day input{color:#d8ecff;border-color:#4da3ff;}
+body.blue .day input::placeholder{color:rgba(216,236,255,0.3);}
+body.blue .calculator input,body.blue .calculator select,body.blue .panel textarea{color:#d8ecff;border-color:#4da3ff;}
+body.blue .calculator{border-color:#4da3ff;}
+body.blue .export,body.blue #calcBtn,body.blue .panel button{background:linear-gradient(135deg,#4da3ff,#d8ecff);color:#000;}
+body.blue .day-num{color:rgba(216,236,255,0.6);}
+body.blue .day.active .day-num{color:#d8ecff;}
+body.blue .week{color:rgba(216,236,255,0.7);}
+body.blue .month span{color:#d8ecff;}
+body.blue #noteList,body.blue #noteList div{color:rgba(216,236,255,0.8);}
+
+body.purple{background:#12051d;}
+body.purple .card{background:linear-gradient(160deg,rgba(180,108,255,.15),transparent 35%),#221035;border-color:#b46cff;box-shadow:0 20px 80px rgba(180,108,255,.3);}
+body.purple .title{background:linear-gradient(180deg,#fff,#efd7ff);-webkit-background-clip:text;color:transparent;}
+body.purple .sub,body.purple .label,body.purple .note-item,body.purple .calc-result div{color:#a58ac0;}
+body.purple .value,body.purple .calc-result span,body.purple .note-title,body.purple .calc-title,body.purple .panel h3{color:#efd7ff;}
+body.purple .theme button,body.purple .month button,body.purple .clear{border-color:#b46cff;color:#efd7ff;}
+body.purple .stat,body.purple .day,body.purple .note-box,body.purple .panel{background:rgba(180,108,255,.05);border-color:rgba(180,108,255,.2);}
+body.purple .day.active{border-color:#b46cff;background:rgba(180,108,255,.1);}
+body.purple .day input{color:#efd7ff;border-color:#b46cff;}
+body.purple .day input::placeholder{color:rgba(239,215,255,0.3);}
+body.purple .calculator input,body.purple .calculator select,body.purple .panel textarea{color:#efd7ff;border-color:#b46cff;}
+body.purple .calculator{border-color:#b46cff;}
+body.purple .export,body.purple #calcBtn,body.purple .panel button{background:linear-gradient(135deg,#b46cff,#efd7ff);color:#000;}
+body.purple .day-num{color:rgba(239,215,255,0.6);}
+body.purple .day.active .day-num{color:#efd7ff;}
+body.purple .week{color:rgba(239,215,255,0.7);}
+body.purple .month span{color:#efd7ff;}
+body.purple #noteList,body.purple #noteList div{color:rgba(239,215,255,0.8);}
+
+body.black{background:#000;}
+body.black .card{background:linear-gradient(160deg,rgba(238,238,238,.1),transparent 35%),#080808;border-color:#eeeeee;box-shadow:0 20px 80px rgba(255,255,255,.15);}
+body.black .title{background:linear-gradient(180deg,#fff,#ffffff);-webkit-background-clip:text;color:transparent;}
+body.black .sub,body.black .label,body.black .note-item,body.black .calc-result div{color:#777;}
+body.black .value,body.black .calc-result span,body.black .note-title,body.black .calc-title,body.black .panel h3{color:#ffffff;}
+body.black .theme button,body.black .month button,body.black .clear{border-color:#eeeeee;color:#ffffff;}
+body.black .stat,body.black .day,body.black .note-box,body.black .panel{background:rgba(238,238,238,.05);border-color:rgba(238,238,238,.15);}
+body.black .day.active{border-color:#eeeeee;background:rgba(238,238,238,.08);}
+body.black .day input{color:#ffffff;border-color:#eeeeee;}
+body.black .day input::placeholder{color:rgba(255,255,255,0.3);}
+body.black .calculator input,body.black .calculator select,body.black .panel textarea{color:#ffffff;border-color:#eeeeee;}
+body.black .calculator{border-color:#eeeeee;}
+body.black .export,body.black #calcBtn,body.black .panel button{background:linear-gradient(135deg,#eeeeee,#ffffff);color:#000;}
+body.black .day-num{color:rgba(255,255,255,0.6);}
+body.black .day.active .day-num{color:#ffffff;}
+body.black .week{color:rgba(255,255,255,0.7);}
+body.black .month span{color:#ffffff;}
+body.black #noteList,body.black #noteList div{color:rgba(255,255,255,0.8);}
+
+body.rose{background:#1b080d;}
+body.rose .card{background:linear-gradient(160deg,rgba(255,143,163,.15),transparent 35%),#2a1018;border-color:#ff8fa3;box-shadow:0 20px 80px rgba(255,143,163,.3);}
+body.rose .title{background:linear-gradient(180deg,#fff,#ffe0e7);-webkit-background-clip:text;color:transparent;}
+body.rose .sub,body.rose .label,body.rose .note-item,body.rose .calc-result div{color:#c98c99;}
+body.rose .value,body.rose .calc-result span,body.rose .note-title,body.rose .calc-title,body.rose .panel h3{color:#ffe0e7;}
+body.rose .theme button,body.rose .month button,body.rose .clear{border-color:#ff8fa3;color:#ffe0e7;}
+body.rose .stat,body.rose .day,body.rose .note-box,body.rose .panel{background:rgba(255,143,163,.05);border-color:rgba(255,143,163,.2);}
+body.rose .day.active{border-color:#ff8fa3;background:rgba(255,143,163,.1);}
+body.rose .day input{color:#ffe0e7;border-color:#ff8fa3;}
+body.rose .day input::placeholder{color:rgba(255,224,231,0.3);}
+body.rose .calculator input,body.rose .calculator select,body.rose .panel textarea{color:#ffe0e7;border-color:#ff8fa3;}
+body.rose .calculator{border-color:#ff8fa3;}
+body.rose .export,body.rose #calcBtn,body.rose .panel button{background:linear-gradient(135deg,#ff8fa3,#ffe0e7);color:#000;}
+body.rose .day-num{color:rgba(255,224,231,0.6);}
+body.rose .day.active .day-num{color:#ffe0e7;}
+body.rose .week{color:rgba(255,224,231,0.7);}
+body.rose .month span{color:#ffe0e7;}
+body.rose #noteList,body.rose #noteList div{color:rgba(255,224,231,0.8);}
+
+body.ocean{background:#03151f;}
+body.ocean .card{background:linear-gradient(160deg,rgba(32,213,255,.15),transparent 35%),#082938;border-color:#20d5ff;box-shadow:0 20px 80px rgba(32,213,255,.3);}
+body.ocean .title{background:linear-gradient(180deg,#fff,#d9f8ff);-webkit-background-clip:text;color:transparent;}
+body.ocean .sub,body.ocean .label,body.ocean .note-item,body.ocean .calc-result div{color:#6aaabd;}
+body.ocean .value,body.ocean .calc-result span,body.ocean .note-title,body.ocean .calc-title,body.ocean .panel h3{color:#d9f8ff;}
+body.ocean .theme button,body.ocean .month button,body.ocean .clear{border-color:#20d5ff;color:#d9f8ff;}
+body.ocean .stat,body.ocean .day,body.ocean .note-box,body.ocean .panel{background:rgba(32,213,255,.05);border-color:rgba(32,213,255,.2);}
+body.ocean .day.active{border-color:#20d5ff;background:rgba(32,213,255,.1);}
+body.ocean .day input{color:#d9f8ff;border-color:#20d5ff;}
+body.ocean .day input::placeholder{color:rgba(217,248,255,0.3);}
+body.ocean .calculator input,body.ocean .calculator select,body.ocean .panel textarea{color:#d9f8ff;border-color:#20d5ff;}
+body.ocean .calculator{border-color:#20d5ff;}
+body.ocean .export,body.ocean #calcBtn,body.ocean .panel button{background:linear-gradient(135deg,#20d5ff,#d9f8ff);color:#000;}
+body.ocean .day-num{color:rgba(217,248,255,0.6);}
+body.ocean .day.active .day-num{color:#d9f8ff;}
+body.ocean .week{color:rgba(217,248,255,0.7);}
+body.ocean .month span{color:#d9f8ff;}
+body.ocean #noteList,body.ocean #noteList div{color:rgba(217,248,255,0.8);}
+
+body.silver{background:#111;}
+body.silver .card{background:linear-gradient(160deg,rgba(221,221,221,.12),transparent 35%),#222;border-color:#ddd;box-shadow:0 20px 80px rgba(221,221,221,.25);}
+body.silver .title{background:linear-gradient(180deg,#fff,#ffffff);-webkit-background-clip:text;color:transparent;}
+body.silver .sub,body.silver .label,body.silver .note-item,body.silver .calc-result div{color:#999;}
+body.silver .value,body.silver .calc-result span,body.silver .note-title,body.silver .calc-title,body.silver .panel h3{color:#fff;}
+body.silver .theme button,body.silver .month button,body.silver .clear{border-color:#ddd;color:#fff;}
+body.silver .stat,body.silver .day,body.silver .note-box,body.silver .panel{background:rgba(221,221,221,.05);border-color:rgba(221,221,221,.15);}
+body.silver .day.active{border-color:#ddd;background:rgba(221,221,221,.08);}
+body.silver .day input{color:#fff;border-color:#ddd;}
+body.silver .day input::placeholder{color:rgba(255,255,255,0.3);}
+body.silver .calculator input,body.silver .calculator select,body.silver .panel textarea{color:#fff;border-color:#ddd;}
+body.silver .calculator{border-color:#ddd;}
+body.silver .export,body.silver #calcBtn,body.silver .panel button{background:linear-gradient(135deg,#ddd,#fff);color:#000;}
+body.silver .day-num{color:rgba(255,255,255,0.6);}
+body.silver .day.active .day-num{color:#ffffff;}
+body.silver .week{color:rgba(255,255,255,0.7);}
+body.silver .month span{color:#ffffff;}
+body.silver #noteList,body.silver #noteList div{color:rgba(255,255,255,0.8);}
+
+.wrap{width:100%;max-width:440px;}
+.card{position:relative;overflow:hidden;width:100%;padding:24px 18px;border-radius:30px;border-width:1px;border-style:solid;}
+.card:before{content:"";position:absolute;width:420px;height:420px;left:-160px;top:-160px;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%);pointer-events:none;}
+.inner{position:absolute;inset:6px;border-radius:25px;border:1px solid rgba(255,255,255,.1);pointer-events:none;}
+.title{position:relative;text-align:center;font-size:30px;font-weight:900;letter-spacing:5px;}
+.sub{text-align:center;margin-top:8px;font-size:12px;letter-spacing:3px;}
+.theme{display:flex;gap:5px;margin:20px 0;flex-wrap:wrap;}
+.theme button{flex:1;min-width:60px;height:34px;border-radius:18px;background:rgba(255,255,255,.05);font-size:11px;cursor:pointer;border-width:1px;border-style:solid;}
+.theme button:hover{filter:brightness(1.2);}
+.stats{display:flex;gap:10px;}
+.stat{flex:1;padding:15px 5px;border-radius:16px;text-align:center;border-width:1px;border-style:solid;}
+.label{font-size:11px;}
+.value{margin-top:8px;font-size:20px;font-weight:900;}
+.month{margin:22px 0;display:flex;align-items:center;justify-content:space-between;}
+.month button{width:42px;height:36px;border-radius:18px;background:none;font-size:25px;cursor:pointer;border-width:1px;border-style:solid;}
+.month span{font-size:20px;font-weight:900;}
+.week{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:12px;margin-bottom:8px;font-weight:bold;}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.day{height:58px;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;cursor:pointer;border-width:1px;border-style:solid;}
+.day-num{font-size:12px;font-weight:bold;line-height:1;margin-bottom:2px;}
+.day input{width:90%;height:22px;border:0;outline:0;background:none;text-align:center!important;font-size:13px;font-weight:bold;}
+.day input::placeholder{font-size:11px;}
+.note-icon{position:absolute;right:3px;top:2px;font-size:11px;}
+.note-box{margin-top:18px;padding:14px;border-radius:18px;border-width:1px;border-style:solid;}
+.note-title{font-weight:bold;margin-bottom:10px;}
+.note-item{font-size:12px;line-height:22px;}
+.calculator{margin-top:18px;padding:15px;border-radius:20px;border-width:1px;border-style:solid;}
+.calc-title{text-align:center;font-size:18px;font-weight:900;margin-bottom:15px;}
+.calculator input,.calculator select{width:100%;height:45px;margin-bottom:12px;border-radius:12px;background:#000;outline:none;font-size:14px;text-align:center;border-width:1px;border-style:solid;}
+#calcBtn{width:100%;height:45px;border-radius:15px;border:0;font-size:15px;font-weight:bold;cursor:pointer;}
+.calc-result{margin-top:12px;background:#000;border-radius:15px;padding:10px;}
+.calc-result div{display:flex;justify-content:space-between;padding:8px;font-size:13px;}
+.calc-result span{font-size:20px;font-weight:900;}
+.buttons{display:flex;gap:12px;margin-top:20px;}
+.buttons button{flex:1;height:52px;border-radius:18px;font-size:15px;font-weight:bold;cursor:pointer;border-width:0;}
+.export{border-width:0;}
+.clear{background:transparent;}
+.brand{margin-top:20px;text-align:center;font-size:11px;letter-spacing:5px;color:rgba(255,255,255,.25);}
+.mask{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.75);z-index:999;}
+.panel{width:85%;padding:20px;border-radius:22px;border-width:1px;border-style:solid;}
+.panel h3{text-align:center;margin-bottom:15px;font-size:16px;}
+.panel textarea{width:100%;height:130px;border-radius:15px;padding:10px;font-size:14px;resize:none;outline:none;background:#000;}
+.panel button{width:100%;height:45px;margin-top:15px;border-radius:15px;font-size:15px;font-weight:bold;cursor:pointer;border-width:0;}
+
+.preview-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:5px;}
+.preview-overlay img{max-width:100%;max-height:90vh;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.5);object-fit:contain;}
+.preview-tip{color:#fff;font-size:13px;font-weight:bold;margin:5px 0;text-align:center;}
+.preview-close{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:6px 20px;border-radius:15px;font-size:11px;cursor:pointer;margin-top:3px;}
+/* USDT 产品收益计算器 */
+.product-calculator {
+  margin: 16px 0;
+  padding: 18px 14px;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.product-calculator h3 {
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: 17px;
+  color: var(--main, #c9a84c);
+}
+
+.product-calculator .calc-field {
+  margin-bottom: 14px;
+}
+
+.product-calculator .calc-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: inherit;
+}
+
+.product-calculator .calc-field input {
+  display: block;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid rgba(160, 160, 160, 0.4);
+  border-radius: 8px;
+  background: rgba(128, 128, 128, 0.08);
+  color: inherit;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.product-calculator #calcBtn {
+  width: 100%;
+  min-height: 42px;
+  border: none;
+  border-radius: 8px;
+  background: #c9a84c;
+  color: #17120a;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.product-calculator .calc-result {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(128, 128, 128, 0.09);
+  line-height: 2;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.product-calculator .calc-result strong {
+  color: var(--main, #c9a84c);
+}
+
+.product-calculator .calc-tip {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+  .product-calculator {
+    padding: 14px 10px;
+  }
+
+  .product-calculator h3 {
+    font-size: 16px;
+  }
+}
+/* 产品计算器：适配所有主题 */
+body.gold {
+  --pc-main: #c9a84c;
+  --pc-text: #ffeeb0;
+  --pc-border: #c9a84c;
+}
+body.jade {
+  --pc-main: #23c997;
+  --pc-text: #d0fff2;
+  --pc-border: #23c997;
+}
+body.blue {
+  --pc-main: #4da3ff;
+  --pc-text: #d8ecff;
+  --pc-border: #4da3ff;
+}
+body.purple {
+  --pc-main: #b46cff;
+  --pc-text: #efd7ff;
+  --pc-border: #b46cff;
+}
+body.black {
+  --pc-main: #fff;
+  --pc-text: #fff;
+  --pc-border: #eee;
+}
+body.rose {
+  --pc-main: #ff8fa3;
+  --pc-text: #ffe0e7;
+  --pc-border: #ff8fa3;
+}
+body.ocean {
+  --pc-main: #20d5ff;
+  --pc-text: #d9f8ff;
+  --pc-border: #20d5ff;
+}
+body.silver {
+  --pc-main: #ddd;
+  --pc-text: #fff;
+  --pc-border: #ddd;
+}
+
+.product-calculator {
+  color: var(--pc-text, #eee);
+  border-color: var(--pc-border, #c9a84c);
+}
+
+.product-calculator h3,
+.product-calculator .calc-result strong {
+  color: var(--pc-main, #c9a84c);
+}
+
+.product-calculator .calc-field input,
+.product-calculator .calc-field select {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--pc-border, #c9a84c);
+  border-radius: 8px;
+  background: #080808;
+  color: var(--pc-text, #fff);
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.product-calculator .calc-field select {
+  display: block;
+  margin-bottom: 0;
+}
+
+.product-calculator .calc-field input:focus,
+.product-calculator .calc-field select:focus {
+  outline: 2px solid var(--pc-main, #c9a84c);
+  outline-offset: 2px;
+}
+
+.product-calculator .calc-field input[readonly] {
+  opacity: 0.9;
+}
+</style>
+</head>
+
+<body class="gold">
+<div class="wrap">
+<div class="card" id="capture">
+<div class="inner"></div>
+<div class="title">顶峰收益账本</div>
+<div class="sub">财富记录 · 节点共建</div>
+<div class="theme" id="themeBtns">
+<button onclick="changeTheme('gold')">鎏金</button>
+<button onclick="changeTheme('jade')">翡翠</button>
+<button onclick="changeTheme('blue')">星耀</button>
+<button onclick="changeTheme('purple')">紫晶</button>
+<button onclick="changeTheme('black')">黑钻</button>
+<button onclick="changeTheme('rose')">玫瑰</button>
+<button onclick="changeTheme('ocean')">深海</button>
+<button onclick="changeTheme('silver')">银灰</button>
+</div>
+<div class="stats" id="statsArea">
+<div class="stat"><div class="label">累计收益</div><div class="value" id="sum">$0</div></div>
+<div class="stat"><div class="label">收益天数</div><div class="value" id="days">0</div></div>
+<div class="stat"><div class="label">日均收益</div><div class="value" id="avg">$0</div></div>
+</div>
+<div class="month" id="monthNav">
+<button id="prev">‹</button>
+<span id="ym"></span>
+<button id="next">›</button>
+</div>
+<div class="week" id="weekRow"><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div></div>
+<div class="grid" id="grid"></div>
+<div class="note-box" id="noteBox">
+<div class="note-title">📝 日期备注</div>
+<div id="noteList" style="font-size:12px;line-height:22px;">暂无备注</div>
+</div>
+<div class="product-calculator" id="productCalculator">
+  <h3>💎 USDT 产品收益计算器</h3>
+
+  <div class="calc-field">
+    <label for="calcProduct">选择产品</label>
+  <select id="calcProduct">
+  <option value="product1">节点精选包（每日 0.5%）</option>
+  <option value="product2">新手包（每日 1%）</option>
+  <option value="product3">稳健包（每日 0.8%）</option>
+  <option value="product4">进阶包（每日 0.9%）</option>
+  <option value="product5">进阶II包（每日 1.1%）</option>
+  <option value="custom">其他产品（自定义）</option>
+</select>
+  </div>
+
+  <div class="calc-field" id="customProductField" style="display:none;">
+    <label for="customProductName">产品名称</label>
+    <input id="customProductName" type="text" placeholder="请输入产品名称">
+  </div>
+
+  <div class="calc-field">
+    <label for="calcAmount">参与金额（USDT）</label>
+    <input id="calcAmount" type="number" min="0" step="any" placeholder="请输入参与金额">
+  </div>
+
+  <div class="calc-field">
+    <label for="calcRate">每日收益率（%）</label>
+    <input id="calcRate" type="number" min="0" step="any" placeholder="请设置每日收益率">
+  </div>
+
+  <div class="calc-field">
+    <label for="calcDays">持有天数</label>
+    <input id="calcDays" type="number" min="0" step="1" placeholder="请输入持有天数">
+  </div>
+
+  <button type="button" id="calcBtn">计算收益</button>
+
+  <div class="calc-result">
+  <div>当前产品：<strong id="calcProductName">未选择</strong></div>
+  <div>预估收益：<strong id="calcProfit">0.00 USDT</strong></div>
+  <div>本息合计：<strong id="calcTotal">0.00 USDT</strong></div>
+</div>
+
+  <div class="calc-tip">固定日收益 · 不复利 · 仅供计算参考</div>
+</div>
+<div class="buttons" id="btnArea">
+<button class="export" id="export">📸 高清导出</button>
+<button class="clear" id="clear">清空</button>
+</div>
+<div class="brand">D I N G F E N G · W E A L T H</div>
+</div>
+</div>
+
+<div class="preview-overlay" id="previewOverlay">
+<img id="previewImage" src="" alt="顶峰收益账本">
+<div class="preview-tip">⬇️ 长按图片保存到相册</div>
+<button class="preview-close" onclick="document.getElementById('previewOverlay').style.display='none'">关 闭</button>
+</div>
+
+<div class="mask" id="mask">
+<div class="panel">
+<h3 id="noteTitle">日期备注</h3>
+<textarea id="noteText" placeholder="输入当天备注"></textarea>
+<button id="saveNote">保存备注</button>
+</div>
+</div>
+
+<script>
+var posterThemes={
+gold:{main:"#c9a84c",mainR:"201,168,76",light:"#ffeeb0",lightR:"255,238,176",bg:"#080808",icon:"👑",name:"鎏金GOLD",slogan:"财富如金·历久弥新",particles:["✦","✧","◆","⬥"]},
+jade:{main:"#23c997",mainR:"35,201,151",light:"#d0fff2",lightR:"208,255,242",bg:"#031710",icon:"💚",name:"翡翠JADE",slogan:"生机盎然·财源广进",particles:["❦","❧","✿","❀"]},
+blue:{main:"#4da3ff",mainR:"77,163,255",light:"#d8ecff",lightR:"216,236,255",bg:"#061326",icon:"💙",name:"星耀BLUE",slogan:"星辰大海·财富无限",particles:["✧","✶","✹","✦"]},
+purple:{main:"#b46cff",mainR:"180,108,255",light:"#efd7ff",lightR:"239,215,255",bg:"#12051d",icon:"💜",name:"紫晶PURPLE",slogan:"神秘高贵·财富密码",particles:["☪","✡","🔮","✶"]},
+black:{main:"#eee",mainR:"238,238,238",light:"#fff",lightR:"255,255,255",bg:"#000",icon:"🖤",name:"黑钻BLACK",slogan:"极致简约·非凡财富",particles:["◈","◇","⬖","⬗"]},
+rose:{main:"#ff8fa3",mainR:"255,143,163",light:"#ffe0e7",lightR:"255,224,231",bg:"#1b080d",icon:"💗",name:"玫瑰ROSE",slogan:"浪漫温馨·财富之美",particles:["♡","♥","❦","✿"]},
+ocean:{main:"#20d5ff",mainR:"32,213,255",light:"#d9f8ff",lightR:"217,248,255",bg:"#03151f",icon:"💎",name:"深海OCEAN",slogan:"波澜壮阔·财富之海",particles:["~","≈","≋","∿"]},
+silver:{main:"#ddd",mainR:"221,221,221",light:"#fff",lightR:"255,255,255",bg:"#111",icon:"🤍",name:"银灰SILVER",slogan:"低调奢华·财富永恒",particles:["◈","◇","○","◎"]}
+};
+
+function rgba(r,g,b,a){return"rgba("+r+","+g+","+b+","+a+")";}
+function hex2rgb(h){return{ r:parseInt(h.slice(1,3),16), g:parseInt(h.slice(3,5),16), b:parseInt(h.slice(5,7),16) };}
+function changeTheme(t){document.body.className=t;try{localStorage.setItem("ps_theme",t);}catch(e){}}
+(function(){var t=localStorage.getItem("ps_theme");document.body.className=t?t:"gold";})();
+
+var now=new Date();
+var income={},notes={};
+try{income=JSON.parse(localStorage.getItem("ps_income")||"{}");}catch(e){}
+try{notes=JSON.parse(localStorage.getItem("ps_notes")||"{}");}catch(e){}
+var currentDay=null;
+
+function getKey(){return now.getFullYear()+"-"+now.getMonth();}
+
+function render(){
+var y=now.getFullYear(),m=now.getMonth();
+document.getElementById("ym").innerHTML=y+"年"+(m+1)+"月";
+var grid=document.getElementById("grid");grid.innerHTML="";
+var first=(new Date(y,m,1).getDay()+6)%7;
+var total=new Date(y,m+1,0).getDate();
+var key=getKey();
+if(!income[key])income[key]={};if(!notes[key])notes[key]={};
+for(var i=0;i<first;i++){var e=document.createElement("div");e.className="day";e.style.visibility="hidden";grid.appendChild(e);}
+for(var d=1;d<=total;d++){
+var box=document.createElement("div");box.className="day";
+if(income[key][d])box.classList.add("active");
+if(notes[key][d]){var ic=document.createElement("span");ic.className="note-icon";ic.innerHTML="📝";box.appendChild(ic);}
+var num=document.createElement("div");num.className="day-num";num.innerHTML=d;box.appendChild(num);
+var inp=document.createElement("input");inp.value=income[key][d]||"";inp.placeholder="0";inp.inputMode="numeric";
+(function(k,day,box){inp.oninput=function(){this.value=this.value.replace(/\D/g,"").substring(0,8);if(this.value){income[k][day]=Number(this.value);box.classList.add("active");}else{delete income[k][day];box.classList.remove("active");}try{localStorage.setItem("ps_income",JSON.stringify(income));}catch(e){}calc();};})(key,d,box);
+inp.onclick=function(e){e.stopPropagation();};
+box.onclick=(function(day){return function(){openNote(day);};})(d);
+box.appendChild(inp);grid.appendChild(box);
+}
+calc();showNotes();
+}
+
+function calc(){var key=getKey(),sum=0,days=0;for(var i in income[key]||{}){if(income[key][i]){sum+=income[key][i];days++;}}document.getElementById("sum").innerHTML="$"+sum.toLocaleString();document.getElementById("days").innerHTML=days;document.getElementById("avg").innerHTML="$"+(days?Math.round(sum/days):0).toLocaleString();}
+function openNote(day){currentDay=day;var key=getKey();document.getElementById("noteTitle").innerHTML=(now.getMonth()+1)+"月"+day+"日备注";document.getElementById("noteText").value=(notes[key]&&notes[key][day])||"";document.getElementById("mask").style.display="flex";}
+document.getElementById("saveNote").onclick=function(){var key=getKey(),txt=document.getElementById("noteText").value.trim();if(!notes[key])notes[key]={};if(txt)notes[key][currentDay]=txt;else delete notes[key][currentDay];try{localStorage.setItem("ps_notes",JSON.stringify(notes));}catch(e){}document.getElementById("mask").style.display="none";render();};
+document.getElementById("mask").onclick=function(e){if(e.target===this)this.style.display="none";};
+function showNotes(){var key=getKey(),box=document.getElementById("noteList"),html="";for(var d in notes[key]||[])html+="<div>📝 "+d+"日："+notes[key][d]+"</div>";box.innerHTML=html||"<span style='opacity:.5'>暂无备注</span>";}
+document.getElementById("prev").onclick=function(){now.setMonth(now.getMonth()-1);render();};
+document.getElementById("next").onclick=function(){now.setMonth(now.getMonth()+1);render();};
+document.getElementById("clear").onclick=function(){if(confirm("确定清空本月收益？")){delete income[getKey()];try{localStorage.setItem("ps_income",JSON.stringify(income));}catch(e){}render();}};
+
+function getStatSum(){var k=getKey(),s=0;for(var i in income[k]||{})s+=income[k][i]||0;return s.toLocaleString();}
+function getStatDays(){var k=getKey(),d=0;for(var i in income[k]||{})if(income[k][i])d++;return d;}
+function getStatAvg(){var k=getKey(),s=0,d=0;for(var i in income[k]||{}){if(income[k][i]){s+=income[k][i];d++;}}return d?Math.round(s/d).toLocaleString():0;}
+
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+document.getElementById("export").onclick=function(){
+var btn=this;
+btn.innerHTML="⏳";
+btn.disabled=true;
+
+var themeEl=document.getElementById("themeBtns");
+var btnEl=document.getElementById("btnArea");
+var productCalcEl=document.getElementById("productCalculator");
+
+var origD=[
+  themeEl.style.display,
+  btnEl.style.display,
+  productCalcEl.style.display
+];
+
+themeEl.style.display="none";
+btnEl.style.display="none";
+productCalcEl.style.display="none";
+
+var card=document.getElementById("capture");
+
+html2canvas(card,{backgroundColor:null,scale:2,useCORS:true,allowTaint:true}).then(function(canvas){
+themeEl.style.display=origD[0];
+btnEl.style.display=origD[1];
+productCalcEl.style.display=origD[2];
+
+var t=document.body.className;
+var pt=posterThemes[t]||posterThemes.gold;
+var M=pt.main;
+var mc=hex2rgb(M);
+
+var dpr=2;
+var pW=720*dpr;
+var m=20*dpr;
+
+var ty=15*dpr;
+var th=105*dpr;
+
+var cW=pW-m*2;
+var cH=canvas.height*(cW/canvas.width);
+var cX=m;
+var cY=ty+th+10*dpr;
+
+var pH=cY+cH+45*dpr;
+
+var pC=document.createElement("canvas");
+pC.width=pW;
+pC.height=pH;
+var ctx=pC.getContext("2d");
+
+// 纯黑背景铺满
+ctx.fillStyle=pt.bg;
+ctx.fillRect(0,0,pW,pH);
+
+// 光晕
+var g=ctx.createRadialGradient(pW/2,ty+30*dpr,0,pW/2,ty+30*dpr,pW*0.4);
+g.addColorStop(0,rgba(mc.r,mc.g,mc.b,0.08));g.addColorStop(1,"transparent");
+ctx.fillStyle=g;ctx.fillRect(0,0,pW,th+20*dpr);
+
+// 粒子
+ctx.fillStyle=rgba(mc.r,mc.g,mc.b,0.03);
+for(var p=0;p<20;p++){ctx.font=(5+Math.random()*10)*dpr+"px serif";ctx.fillText(pt.particles[Math.floor(Math.random()*pt.particles.length)],Math.random()*pW,Math.random()*(ty+th));}
+
+// 标题
+ctx.font=40*dpr+"px serif";ctx.textAlign="center";
+ctx.fillText(pt.icon,pW/2,ty+25*dpr);
+ctx.font="bold "+34*dpr+"px 'PingFang SC','Microsoft YaHei',sans-serif";
+var tg=ctx.createLinearGradient(0,ty+30*dpr,pW,ty+30*dpr);
+tg.addColorStop(0,M);tg.addColorStop(0.3,pt.light);tg.addColorStop(0.7,pt.light);tg.addColorStop(1,M);
+ctx.fillStyle=tg;
+ctx.fillText("顶 峰 收 益 账 本",pW/2,ty+62*dpr);
+ctx.font="bold "+12*dpr+"px 'PingFang SC',sans-serif";
+ctx.fillStyle=rgba(mc.r,mc.g,mc.b,0.45);
+ctx.fillText(pt.name+" · "+pt.slogan,pW/2,ty+85*dpr);
+
+// 卡片
+ctx.save();
+ctx.shadowColor=rgba(mc.r,mc.g,mc.b,0.35);ctx.shadowBlur=40*dpr;ctx.shadowOffsetY=15*dpr;
+roundRect(ctx,cX,cY,cW,cH,14*dpr);
+ctx.fillStyle="#0a0a0a";ctx.fill();
+ctx.restore();
+ctx.drawImage(canvas,cX,cY,cW,cH);
+roundRect(ctx,cX,cY,cW,cH,14*dpr);
+ctx.strokeStyle=M;ctx.lineWidth=1.5*dpr;ctx.stroke();
+
+// 水印
+var fy=cY+cH+22*dpr;
+ctx.font=8*dpr+"px 'PingFang SC',sans-serif";
+ctx.fillStyle="rgba(255,255,255,0.07)";ctx.textAlign="center";
+ctx.fillText("P A N S H I · W E A L T H · "+new Date().getFullYear()+" | "+now.getFullYear()+"年"+(now.getMonth()+1)+"月",pW/2,fy);
+
+var dataUrl=pC.toDataURL("image/png",0.8);
+var isM=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+if(isM){
+document.getElementById("previewImage").src=dataUrl;
+document.getElementById("previewOverlay").style.display="flex";
+}else{
+var a=document.createElement("a");
+a.href=dataUrl;
+a.download="顶峰收益账本_"+now.getFullYear()+"年"+(now.getMonth()+1)+"月.png";
+document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+btn.innerHTML="📸 高清导出";
+btn.disabled=false;
+}).catch(function(e){
+  themeEl.style.display = origD[0];
+  btnEl.style.display = origD[1];
+  productCalcEl.style.display = origD[2];
+
+   alert("失败：" + e.message);
+  btn.innerHTML = "📸 高清导出";
+  btn.disabled = false;
+});
+};
+
+var calcProduct = document.getElementById("calcProduct");
+var calcRate = document.getElementById("calcRate");
+var customProductField = document.getElementById("customProductField");
+
+var productRates = {
+  product1: 0.5,
+  product2: 1,
+  product3: 0.8,
+  product4: 0.9,
+  product5: 1.1
+};
+
+calcProduct.addEventListener("change", function () {
+  var selectedProduct = calcProduct.value;
+
+  if (selectedProduct === "custom") {
+    customProductField.style.display = "block";
+    calcRate.value = "";
+    calcRate.readOnly = false;
+  } else {
+    customProductField.style.display = "none";
+    calcRate.value = productRates[selectedProduct];
+    calcRate.readOnly = true;
+  }
+
+  document.getElementById("calcProfit").textContent = "0.00 USDT";
+  document.getElementById("calcTotal").textContent = "0.00 USDT";
+  document.getElementById("calcProductName").textContent =
+    selectedProduct === "custom"
+      ? "自定义产品"
+      : calcProduct.options[calcProduct.selectedIndex].text;
+});
+
+// 页面打开时，自动填入默认产品收益率
+calcRate.value = productRates[calcProduct.value];
+calcRate.readOnly = true;  
+  document.getElementById("calcProductName").textContent =
+  calcProduct.options[calcProduct.selectedIndex].text;
+document.getElementById("calcBtn").addEventListener("click", function () {
+  var amount = Number(document.getElementById("calcAmount").value);
+  var rate = Number(document.getElementById("calcRate").value);
+  var days = Number(document.getElementById("calcDays").value);
+
+  if (
+    document.getElementById("calcAmount").value.trim() === "" ||
+    document.getElementById("calcRate").value.trim() === "" ||
+    document.getElementById("calcDays").value.trim() === "" ||
+    !Number.isFinite(amount) ||
+    !Number.isFinite(rate) ||
+    !Number.isFinite(days) ||
+    amount < 0 ||
+    rate < 0 ||
+    days < 0 ||
+    !Number.isInteger(days)
+  ) {
+    alert("请输入有效的金额、每日收益率和整数天数。");
+    return;
+  }
+
+  var selectedProduct = document.getElementById("calcProduct").value;
+var productName = "";
+
+if (selectedProduct === "custom") {
+  productName =
+    document.getElementById("customProductName").value.trim();
+
+  if (productName === "") {
+    alert("请输入自定义产品名称。");
+    return;
+  }
+} else {
+  productName =
+    document.getElementById("calcProduct")
+      .options[document.getElementById("calcProduct").selectedIndex]
+      .text;
+}
+  var profit = amount * rate / 100 * days;
+  var total = amount + profit;
+
+  document.getElementById("calcProduct").setAttribute(
+  "data-last-product",
+  productName
+);
+  document.getElementById("calcProductName").textContent =
+  productName;
+  document.getElementById("calcProfit").textContent =
+    profit.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + " USDT";
+
+document.getElementById("calcTotal").textContent =
+    total.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + " USDT";
+});
+
+// 修改金额、收益率或天数时，清除旧的计算结果
+["calcAmount", "calcRate", "calcDays"].forEach(function (id) {
+  document.getElementById(id).addEventListener("input", function () {
+    document.getElementById("calcProfit").textContent = "0.00 USDT";
+    document.getElementById("calcTotal").textContent = "0.00 USDT";
+  });
+});
+
+
+document.getElementById("previewOverlay").onclick = function(e) {
+if (e.target === this) this.style.display = "none";
+};
+
+render();
+</script>
+</body>
+</html>
